@@ -1,2 +1,2 @@
 # ZTM_portfolio_web
-- testing web server setup + Git and GitHub functionality
+Zero to Mastery web server project turned into a personal portfolio website.

@@ -25,26 +25,17 @@ def content_page(content_page):
         return render_template("index.html")
 
 
-def save_message_data_txt(data):
-    with open("./database.txt", mode="a") as database:
-        email=data["email"]
-        subject=data["subject"]
-        message=data["message"]
-        database.write(f"\n{email},{subject},{message}")
-        return 'data saved!'
-
-
 def save_message_data_csv(data):
-    with open("./database.csv", mode="a", newline='') as database2:
+    with open("./database.csv", mode="a", newline='') as database:
         email=data["email"]
         subject=data["subject"]
         message=data["message"]
-        csv_writer=csv.writer(database2, quoting=csv.QUOTE_NONE)
+        csv_writer=csv.writer(database, quoting=csv.QUOTE_NONE)
         csv_writer.writerow([email,subject,message])
         return 'data saved!'
 
 
-@app.route('/send_message', methods=['POST', 'GET'])
+@app.route('/send_message', methods=['POST'])
 def send_message():
     if request.method=='POST':
         try:
@@ -52,6 +43,6 @@ def send_message():
             save_message_data_csv(data)
             return redirect("thanks.html")
         except:
-            return 'Data weren\'t saved, fix it!'
+            return 'Data haven\'t been saved, please try again.'
     else:
-        return 'Something went wrong, please try again.'
+        return 'Something went wrong, POST request method has failed.'
