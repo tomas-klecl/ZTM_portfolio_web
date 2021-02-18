@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template, send_from_directory, request, redirect
 import csv
+import re
 
 app = Flask(__name__)
 
@@ -26,13 +27,15 @@ def content_page(content_page):
 
 
 def save_message_data_csv(data):
-    with open("./database.csv", mode="a", newline='') as database:
+    with open("./database.csv", mode="a", newline='', encoding='utf-8') as database:
         email=data["email"]
         subject=data["subject"]
         message=data["message"]
-        csv_writer=csv.writer(database, quoting=csv.QUOTE_NONE)
+        # remove newlines
+        # message_final = re.sub(r"\n", " ", message)
+        csv_writer=csv.writer(database, quoting=csv.QUOTE_MINIMAL, delimiter='|')
         csv_writer.writerow([email,subject,message])
-        return 'data saved!'
+        return 'data have been saved!'
 
 
 @app.route('/send_message', methods=['POST'])
@@ -43,6 +46,8 @@ def send_message():
             save_message_data_csv(data)
             return redirect("thanks.html")
         except:
-            return 'Data haven\'t been saved, please try again.'
+            return ('Data haven\'t been sent, unfortunately. Please let me know on tomas.klecl@seznam.cz ' +
+                    'how you filled out this form, so that I can replicate the issue and fix it.')
     else:
-        return 'Something went wrong, POST request method has failed.'
+        return ('Something went wrong, POST request method has failed. Please let me know on ' +
+                'tomas.klecl@seznam.cz what steps you took, so that I can replicate the issue and fix it.')
