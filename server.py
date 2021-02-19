@@ -26,16 +26,19 @@ def content_page(content_page):
         return render_template("index.html")
 
 
-def save_message_data_csv(data):
-    with open("./database.csv", mode="a", newline='', encoding='utf-8') as database:
+def save_message_data(data):
+    with open("./database.csv", mode="a", newline='', encoding='ansi') as database:
         email=data["email"]
         subject=data["subject"]
-        message=data["message"]
-        # remove newlines
-        # message_final = re.sub(r"\n", " ", message)
+        message=re.sub(r"\r?\n", " ", data["message"]) # remove Unix and Windows newlines
         csv_writer=csv.writer(database, quoting=csv.QUOTE_MINIMAL, delimiter='|')
         csv_writer.writerow([email,subject,message])
-        return 'data have been saved!'
+
+        with open("./new_messages.txt", mode="a") as new_mes:
+            new_mes.write(email+'\n')
+            new_mes.write(subject+'\n')
+            new_mes.write(message+'\n\n')
+    return 'data have been saved!'
 
 
 @app.route('/send_message', methods=['POST'])
@@ -43,7 +46,7 @@ def send_message():
     if request.method=='POST':
         try:
             data=request.form.to_dict()
-            save_message_data_csv(data)
+            save_message_data(data)
             return redirect("thanks.html")
         except:
             return ('Data haven\'t been sent, unfortunately. Please let me know on tomas.klecl@seznam.cz ' +
