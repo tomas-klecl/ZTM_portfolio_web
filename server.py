@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, send_from_directory, request, redirect
 import csv
 import re
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -28,13 +29,15 @@ def content_page(content_page):
 
 def save_message_data(data):
     with open("./database.csv", mode="a", newline='', encoding='ansi') as database:
-        email=data["email"]
-        subject=data["subject"]
-        message=re.sub(r"\r?\n", " ", data["message"]) # remove Unix and Windows newlines
-        csv_writer=csv.writer(database, quoting=csv.QUOTE_MINIMAL, delimiter='|')
-        csv_writer.writerow([email,subject,message])
+        date_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        email = data["email"]
+        subject = data["subject"]
+        message = re.sub(r"\r?\n", " ", data["message"]) # remove Unix and Windows newlines
+        csv_writer = csv.writer(database, quoting=csv.QUOTE_MINIMAL, delimiter='|')
+        csv_writer.writerow([date_time,email,subject,message])
 
         with open("./new_messages.txt", mode="a") as new_mes:
+            new_mes.write(date_time+'\n')
             new_mes.write(email+'\n')
             new_mes.write(subject+'\n')
             new_mes.write(message+'\n\n')
