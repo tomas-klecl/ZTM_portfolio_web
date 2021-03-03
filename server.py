@@ -17,10 +17,9 @@ def favicon():
     return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
-template_list=os.listdir('./templates')
-
 @app.route('/<content_page>')
 def content_page(content_page):
+    template_list = os.listdir('./templates')
     if content_page in template_list:
         return render_template(content_page)
     else:
@@ -28,15 +27,15 @@ def content_page(content_page):
 
 
 def save_message_data(data):
-    with open("./database.csv", mode="a", newline='', encoding='ansi') as database:
+    with open("./database.csv", mode="a", newline='', encoding='utf-8') as database:
         date_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         email = data["email"]
         subject = data["subject"]
-        message = re.sub(r"\r?\n", " ", data["message"]) # remove Unix and Windows newlines
+        message = re.sub(r"\r?\n", " ", data["message"])  # remove Unix and Windows newlines
         csv_writer = csv.writer(database, quoting=csv.QUOTE_MINIMAL, delimiter='|')
-        csv_writer.writerow([date_time,email,subject,message])
+        csv_writer.writerow([date_time, email, subject, message])
 
-        with open("./new_messages.txt", mode="a") as new_mes:
+        with open("./new_messages.txt", mode="a", encoding='utf-8') as new_mes:
             new_mes.write(date_time+'\n')
             new_mes.write(email+'\n')
             new_mes.write(subject+'\n')
@@ -46,13 +45,13 @@ def save_message_data(data):
 
 @app.route('/send_message', methods=['POST'])
 def send_message():
-    if request.method=='POST':
+    if request.method == 'POST':
         try:
-            data=request.form.to_dict()
+            data = request.form.to_dict()
             save_message_data(data)
             return redirect("thanks.html")
-        except:
-            return ('Data haven\'t been sent, unfortunately. Please let me know on tomas.klecl@seznam.cz ' +
+        except Exception as e:
+            return (f'Exception \"{e}\" received. Please let me know on tomas.klecl@seznam.cz ' +
                     'how you filled out this form, so that I can replicate the issue and fix it.')
     else:
         return ('Something went wrong, POST request method has failed. Please let me know on ' +
