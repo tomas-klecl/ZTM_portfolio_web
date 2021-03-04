@@ -36,10 +36,7 @@ def save_message_data(data):
         csv_writer.writerow([date_time, email, subject, message])
 
         with open("./new_messages.txt", mode="a", encoding='utf-8') as new_mes:
-            new_mes.write(date_time+'\n')
-            new_mes.write(email+'\n')
-            new_mes.write(subject+'\n')
-            new_mes.write(message+'\n\n')
+            new_mes.write(date_time + '\n' + email + '\n' + subject + '\n' + message + '\n\n')
     return 'data have been saved!'
 
 

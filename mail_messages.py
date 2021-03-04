@@ -6,7 +6,7 @@ msg = EmailMessage()
 msg['From'] = 'your_developer_email_account'
 msg['To'] = 'your_personnal_email_account'
 msg['Subject'] = 'Messages from your website'
-password = 'your_super_secret_password'
+password = 'your_super_secret_developer_email_account_password'
 SMTP_server = 'smtp.gmail.com'
 port = 465
 
@@ -19,8 +19,10 @@ def check_for_messages():
             try:
                 send_messages(messages)
                 print('email has been sent')
+            # preventing the deletion of new_messages.txt content when the email sending fails
             except Exception as e:
                 return print(f'{e}, message sending has failed')
+
             with open(r'.\new_messages.txt', mode="w") as f:
                 return print('new_messages content has been deleted')
         else:
