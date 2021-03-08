@@ -1,5 +1,6 @@
 import smtplib, ssl
 from email.message import EmailMessage
+import os
 
 msg = EmailMessage()
 
@@ -10,11 +11,14 @@ password = 'your_super_secret_developer_email_account_password'
 SMTP_server = 'smtp.gmail.com'
 port = 465
 
+# preventing file path issues when set as a daily run task
+script_directory = os.path.dirname(os.path.abspath(__file__))
+message_file_directory = os.path.join(script_directory, 'new_messages.txt')
 
-# set as a daily-run task
+
 def check_for_messages():
-    with open(r'.\new_messages.txt', mode="r", encoding="utf-8") as mess_file:
-        messages = mess_file.read()
+    with open(message_file_directory, mode="r", encoding="utf-8") as message_file:
+        messages = message_file.read()
         if len(messages) > 0:
             try:
                 send_messages(messages)
@@ -23,7 +27,7 @@ def check_for_messages():
             except Exception as e:
                 return print(f'{e}, message sending has failed')
 
-            with open(r'.\new_messages.txt', mode="w") as f:
+            with open(message_file_directory, mode="w") as f:
                 return print('new_messages content has been deleted')
         else:
             return print('no messages have been received, going to sleep...')
