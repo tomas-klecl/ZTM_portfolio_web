@@ -11,3 +11,4 @@ HOW TO USE:
 2) set up mail_messages.py as a daily-run task (for example on Python Anywhere, which enables one daily task even on free account)
 
 Website template from: http://www.mashup-template.com/templates.html
+Images from: https://unsplash.com/
