@@ -1,4 +1,6 @@
 # portfolio_web
+###### Main library and modules used: Flask, smtplib, email.message
+
 Zero to Mastery web server project turned into a personal portfolio website.
 
 http://tomasklecl.eu.pythonanywhere.com/
